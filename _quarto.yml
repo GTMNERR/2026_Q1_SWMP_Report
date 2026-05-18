@@ -1,0 +1,75 @@
+project:
+  type: book
+  output-dir: docs
+  
+book:
+  title:  2026 Quarterly System-Wide Monitoring Program (SWMP) Report
+  subtitle: Guana Tolomato Matanzas National Estuarine Research Reserve
+  
+  author:
+    - name: Kathryn Petrinec
+    - name: Katrin villinger
+    - name: Megan Howkins
+    - name: Nikki Dix
+    
+  chapters:
+    - index.qmd
+    
+    - part: text/background.qmd
+      chapters:
+      - text/sites.qmd
+      - text/collection.qmd
+      - text/qaqc.qmd
+      
+    - part: text/results.qmd
+      chapters:
+      - text/environmental.qmd
+      - text/nut-indicators.qmd
+      - text/environmental-drivers.qmd
+      - text/misc-bac.qmd
+      - text/maintenance.qmd
+      
+      
+  appendices: 
+    - text/a1-cmecs.qmd
+    
+  site-url: https://GTMNERR.github.io/2026_Q1_SWMP_Report
+  repo-url: https://github.com/GTMNERR/2026_Q1_SWMP_Report
+  repo-actions: [edit, source, issue]
+  search: true
+  favicon: images/friends-logo.png
+  sharing: [twitter, facebook]
+
+  page-footer:
+      left: |
+        The data used in this report was last updated in May 2026.
+      right: |
+        Built with <a href="https://quarto.org/">Quarto</a>.
+
+bibliography: text/references.bib
+
+freeze: false
+
+filters: 
+  - lightbox
+lightbox: auto
+  
+execute:
+  echo: false
+  code-overflow: wrap
+  warning: false
+  error: false
+  
+format:
+  html:
+    theme: 
+      - cosmo
+      - swmp.scss
+    toc: true
+    toc-depth: 3
+ # pdf:
+ #   documentclass: report
+ #   toc: true
+ #   toc-depth: 3
+ #   lof: true
+ #   lot: true

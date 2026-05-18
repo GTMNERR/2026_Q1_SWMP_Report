@@ -1,0 +1,77 @@
+---
+title: "Maintenance Notes"
+link-external-icon: true
+link-external-newwindow: true
+execute:
+  warning: false
+  error: false
+filters:
+  - lightbox
+lightbox: auto
+---
+## Water Quality
+### Sonde and Sensor Failures
+
+Two sonde failures and multiple sensor failures (2 Wiped conductivity/ temperature CT sensors and 2 dissolved oxygen sensors) occurred between January and June 2025. The data sondes were sent in for repairs or taken out of rotation and the sensors were replaced since they are no longer covered under warranty.
+
+Additionally, four data sondes (Matthew, Irma, Pelican, and Triton) experienced a voltage increase during some of their deployments. This may be an indication that the sonde’s internal RTC battery, aka coin cell, is not functioning properly since both Pelican and Triton later in Q2 experienced complete data sonde failures.  
+
+### Sonde and Sensor Malfunctions
+
+#### Wiper Brush Issues
+
+The wiper brush fell off on the following deployments:
+
+Pine Island:
+
+-   March 4 - March 26, 2025 (Irma SN: 20H100465) central wiper SN: 23G100412
+-   June 10 - June 26, 2025 (Megalops SN: 16J102351) central wiper SN: 22A106852
+
+Pellicer Creek:
+
+-   February 26 - March 26, 2025 (Triton SN: 13K102679) central wiper SN: 16J100200
+
+#### Depth Dropouts
+
+No depth dropouts during this reporting period.
+
+#### Broken Data Files
+
+Pellicer Creek was the only station that had broken data files. The data files were broken into many different files upon download. The exact cause of the broken files are unknown but are possible attributed to a faulty sensor, but further investigation needs to be conducted. 
+
+The following is a list of deployments that experienced broken data files and all had a sensor failure or malfunction:
+
+-   Pelican (SN: 15E101699) 04/09/2025 10:15 -- 04/15/2025 13:15, DO sensor failure
+-   Triton (SN: 13K102679) 06/06/2025 11:45 -- 06/16/2025 13:00, CT sensor failure 
+-   Triton (SN: 13K102679) 06/24/2025 09:45 -- 06/27/2025 11:30, DO sensor malfunction
+
+#### Wiped Conductivity and Temperature Sensor Issues
+
+The wiped C/T sensor (SN: 20D101823) in Flounder at Pine Island had a pin corrode and break off during the deployment, leading to missing data for temperature, specific conductivity, and salinity from January 1, 2025 00:00 – January 14, 2025 13:45, with all data missing from January 11, 2025 at 15:15 - January 14, 2025 due to battery failure potentially attributable to this sensor malfunction. 
+
+The same pin corrosion occurred on the wiped C/T sensor (SN: 24H100098) at Fort Matanzas on Marlin (SN: 13E101372) from January 1, 2025 00:00 - January 14, 2025 11:00.
+
+Additionally, the wiped C/T sensor (SN: 20G104544) installed on Triton (SN: 13K102679) failed during the June 6, 2025 11:45 - June 16, 2025 13:00 deployment at Pellicer Creek. Triton was evaluated and redeployed on June 24, 2025 but experienced issues with the dissolved oxygen sensor.
+
+#### Chlorophyll Sensor Issues
+
+On May 29, 2025, Pelican (SN: 15E101699) stopped working at Pellicer Creek. Staff could not communicate with data sonde so all sensors were removed and placed onto another data sonde for post deployment procedures. All of the sensors registered on the other data sonde except for the total algae sensor (SN: 20C202353). Total algae sensor may not be functioning properly, further evaluation is needed.
+
+#### Dissolved Oxygen Sensor Issues
+
+Pine Island experienced two dissolved oxygen sensor failures, the first, dissolved oxygen sensor (SN: 15C105033) deployed on Matthew (SN: 20H100464), failed during the February 11 - March 4, 2025 deployment; and the second, sensor (SN: 13E100915) deployed on Megalops (SN: 16J102351), failed during the June 10 - June 26, 2025 deployment. The dissolved oxygen sensors old and most likely reached life expectancy. 
+
+#### Telemetry Issues
+Research staff received low battery notifications from the telemetry station in March, 2025. On March 24, 2025 staff replaced the battery. On March 26, 2025 live telemetered data stopped reporting on the CDMO website. The station was reset station on April 1, 2025 which rectified the issue. 
+
+### Leveling
+
+The GTM research staff completed the annual task of measuring the elevation of the sonde in Pellicer Creek on March 27 - 28, 2025. The team measured the change in height from a reference benchmark and three positions on the piling holding the sonde. The orthometric height of the sonde tube pin position is used as the station offset when calibrating the depth sensor for the sonde. The orthometric heights of the positions can also be used to determine if the piling holding the sonde is moving vertically.  
+
+## Weather Station
+
+### Sensor Malfunctions
+
+A new MET program that was uploaded to the station on November 13, 2024. This program had an incorrect switch closure for the rain gauge. The station did not record rainfall data beginning on November 13, 2025 12:30 and extending through January 28, 2025.
+
+Also, the MET station has been experiencing elevated night-time PAR values. The elevated readings occur intermittently throughout the year, but the frequency was greater in late 2024 and continued into 2025. The cause of the elevated readings is unknown. Sometimes moisture intrusion can cause elevated readings. The wires were chewed on by a critter, so it is possible that moisture is getting inside the sensor cable. On February 20, 2025, the PAR sensor was replaced but unfortunately the sensor replacement has not rectified the elevated night-time readings.

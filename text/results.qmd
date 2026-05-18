@@ -1,0 +1,12 @@
+---
+title: "Results"
+editor: visual
+---
+
+Analyses were conducted in R and RStudio:
+
+```{r}
+#| label: session-info
+#| echo: false
+sessionInfo()
+```

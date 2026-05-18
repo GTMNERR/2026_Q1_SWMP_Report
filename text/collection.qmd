@@ -1,0 +1,39 @@
+---
+title: "Data Collection"
+link-external-icon: true
+link-external-newwindow: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## Weather
+
+Recent meteorological data were collected using either the Campbell Scientific CR1000 or CR1000X data logger models. CR1000 models were used from June 2006 until November 2024, when the first CR1000X was installed. These data loggers both sampled 15-minute averages of 5-second readings for air temperature, wind direction, and wind speed. The precipitation sensor measured 15-minute totals. The CR10X-2M data logger was historically used from when the station was initialized in September 2002 until June 2006. The CR10X-2M logger sampled all weather station sensors every 5 sec and calculated both hourly and daily averages for air temperature, wind direction, and wind speed. Additionally, instantaneous samples of these parameters were recorded every 15 min. Precipitation data were summed and recorded as 15-minute, hourly, and daily totals.
+
+::: column-margin
+![SWMP Technician, Megan Howkins, swapping out the photosynthetically active radiation (PAR) sensor on the Weather Station at Pellicer Creek during a monthy data download, station cleaning and maintenance visit in February, 2025.](/images/Meg_PAR_Fish_MET_pic.jpg){#fig-met-station}
+:::
+
+Staff complete monthly visits to the meteorological station for regular inspections, maintenance, and data downloads. Data downloads occur at a maximum of 4- week intervals to prevent data loss. At each visit to the station, sensor performance is checked by comparing weather station values to those of a handheld Kestrel 5000 wind/weather instrument. All sensors are inspected for damage or debris and repaired and cleaned accordingly after data are downloaded. Except for the rain gauge (which is calibrated in-house), all sensors are removed and sent to Campbell Scientific for re-calibration when necessary. In addition to data directly obtained from the data logger, Campbell Scientific telemetry equipment also transmitted data to a NOAA GOES satellite hourly.
+
+## Water Quality - Continuous
+
+The continuous water quality stations were equipped with YSI 6-Series Multiparameter sondes from 2003-2015 and YSI EXO2 sonde from 2015-present. The sondes were anchored within a 10-cm (inside diameter) PVC housing pipe mounted vertically onto a piling. Either a steel pin was placed at the bottom of the pipe to hold the sonde 1 m from the bottom, or the sonde was suspended by a chain or rope such that the sensor portion of the sonde extended beyond the end of the PVC housing 1 m from the bottom. To facilitate water flow across the sensors, several 2-cm holes were drilled into the submerged portion of the pipe. Hole density was greatest near the base where the sensors were located.
+
+Sonde exchanges at all stations occur at approximately two-week intervals during warmer months and monthly during cooler months. The exchanges take less than five minutes and include scraping the inside of each deployment tube clean with a customized tool prior to the deployment of the newly calibrated sonde. All calibration, post-deployment readings, and reconditioning of the sondes and sensors are performed in accordance with the methods outlined in the standard operating procedures for the sonde model, in addition to standard operating procedures created by the NERRS CDMO (NERRS, 2013).
+
+Data sondes have collected temperature, salinity, dissolved oxygen, pH, sonde depth, and turbidity data at 30-min intervals, beginning at the Pine Island and Fort Matanzas monitoring stations in December 2000 and at the San Sebastian and Pellicer Creek monitoring stations in February 2002. In January 2007, the NERRS changed from collecting continuous data at 30-min intervals to 15-min intervals. Data used in this report include both sampling intervals.
+
+## Water Quality - Discrete
+
+Water samples are collected monthly at each of the four water quality monitoring stations for minimally nitrite, nitrate, ammonium, total nitrogen, orthophosphate, total phosphorus, chlorophyll *a*, and total suspended solids using two types of sampling methods (grab and diel), on the same day during an ebb tide. Grab samples were collected from all stations in duplicate using a pole sampler and bucket. Diel samples were only collected at the Pellicer Creek station at 2.5-hour intervals for a 25-hour (lunar day) period using a Teledyne ISCO automatic sampler equipped with an internal ice bath to keep samples cold. Both grab and diel samples were collected from the approximate depth of the sensors, 1 m above the bottom. Samples were filtered in the field when feasible; otherwise, they were placed on ice out of light and filtered immediately upon returning to the laboratory.
+
+::: {#fig-nut layout-ncol="2"}
+![Grab sample collection using sampling pole.](/images/2016-07-14_silas-pulling-water-PC.jpg){#fig-grab-sample}
+
+![Diel sampler deployed at Pellicer Creek station.](/images/ISCO-Silas-Tanner.jpg){#fig-isco}
+
+Collection methods for nutrient analyses.
+:::
+
+Water samples collected between January 1, 2003 and June 30, 2010 were collected and analyzed by University of Florida's (UF) Department of Fisheries and Aquatic Sciences. Samples collected between July 1, 2010 and November 30, 2012 were collected by GTMNERR and analyzed by the UF lab. Samples collected on or after December 1, 2012 were collected by GTMNERR and analyzed by the Florida Department of Environmental Protection's (FDEP) Central Laboratory. Both laboratories were certified through the National Environmental Laboratory Accreditation Program and used the American Public Health Association and Environmental Protection Agency methods for analyses. Method details can be found in annual metadata files which are downloadable from the [CDMO](https://cdmo.baruch.sc.edu).

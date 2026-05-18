@@ -1,0 +1,406 @@
+---
+title: "Environmental"
+execute: 
+  warning: false
+  error: false
+filters: 
+  - lightbox
+lightbox: auto
+bibliography: references.bib
+---
+
+```{r}
+#| label: data-load
+#| include: false
+library(here)
+
+source(here::here('R', '00_loadpackages.R'))
+source(here::here('R', '02.2_load_wrangle_WQ-and-MET.R'))
+
+load(here('output','data', 'MET.Rdata'))
+
+load(here('output','data', 'pi_wq.Rdata'))
+load(here('output','data', 'ss_wq.Rdata'))
+load(here('output','data', 'fm_wq.Rdata'))
+load(here('output','data', 'pc_wq.Rdata'))
+```
+
+The following includes variables that establish the estuarine setting: rainfall, light intensity, water temperature, and salinity. These variables are driven primarily by climatic patterns and largely influence water quality, biological processes, and habitat condition.
+
+<!-- ## Summary -->
+<!-- Winter storm Finn (unofficially named) brought rainfall and strong winds in [January](https://www.actionnewsjax.com/news/local/strong-storm-cold-front-will-move-across-northeast-florida-southeast-georgia/DNJ3SOGJ35G4FCKJLPJNP67YZY/) to Northeast Florida causing some local schools to release students early and cancel after school activities (@fig-rainfall-1; @fig-rainfall-2). This event is discussed in further detail in the next chapter. -->
+
+<!-- Total measured rainfall in 2024 was 1347.2 mm (@fig-SeptPrecip-3). The third quarter of the year had the greatest rainfall total (@fig-rainfall) because of September, which had a record-setting high monthly total (@tbl-topRain; @fig-SeptPrecip-1; @fig-SeptPrecip-2). September also had the greatest number of rain days exceeding 10 mm/day (@Fig-rainfall-3), and more storms producing heavy rainfall (@Fig-rainfall-4). Rainfall totals for the fourth quarter of 2024 are incomplete, resulting from a computer program error. Data are missing beginning November 13, 2024, and continuing through the end of the year (see Maintenance Notes Section 8.2.2; @fig-SeptPrecip-4). -->
+
+<!-- Light intensity was highest from April to August. December had the lowest mid-day photosynthetically active radiation (PAR) (@fig-lightintensity). -->
+
+<!-- Daily average air temperatures were highest from June - August, and most variable during January – April and November – December (@fig-range-atemp). -->
+
+<!-- While there were some low water temperatures throughout the year, daily average water temperatures were generally higher than average (@fig-range-temp). Water temperature decreased in August and September with the onset of the large rain events causing water temperatures to fall below the historic average daily range at all four stations (@fig-range-temp-2; @fig-range-temp-3). Water temperatures increased at all four stations in November nearing the historic 2002-2024 maximum daily range  (@fig-range-temp). -->
+
+<!-- Rainfall in January and September – November brought salinity levels lower than their average daily ranges (@fig-range-sal), particularly at the stations farthest from the inlets (@fig-range-sal-1; @fig-range-sal-4). However, the drought conditions during spring increased salinity levels. Salinity stayed higher than the average daily range at all stations through July, but was most pronounced at Pine Island (@fig-range-sal-1).  -->
+
+## Data
+
+### Rainfall
+
+```{r}
+#| label: fig-rainfall
+#| echo: false
+#| fig.cap: Rainfall at the Pellicer Creek weather station. See Maintenance Notes (8.2.2) for details on missing data.
+#| fig.subcap:
+#|    - "Quarterly total precipitation for 2026."
+#|    - "Monthly total precipitation for 2026."
+#|    - "Daily rainfall totals for days with greater than 1mm per day."
+#|    - "Hourly rainfall intensity counts by category per month."
+#| layout-ncol: 2
+
+
+# QUARTERLY ----
+
+MET |> 
+  SWMPrExtension::seasonal_barplot(param = 'totprcp',
+                                   season_grps = list(c(1,2,3), 
+                                                      c(4,5,6), 
+                                                      c(7,8,9), 
+                                                      c(10, 11, 12)),
+                                   season_names = c('Jan-Mar', 
+                                                    'Apr-Jun', 
+                                                    'Jul-Sep', 
+                                                    'Oct-Dec'),
+                                   hist_rng = c(2003,2026),
+                                   hist_avg = TRUE,
+                                   converted = F) + 
+  theme(axis.text.x = element_text(angle = 45,
+                                   vjust = 0.6),
+        axis.text = element_text(color = "black"))
+
+
+## MONTHLY ----
+
+MET |> 
+  filter(datetimestamp > '2026-01-01 00:15'& datetimestamp < '2026-05-01 00:00') %>%
+  # mutate(date = as.Date(datetimestamp),
+  #        month = lubridate::month(date, label = T)) %>% 
+  mutate(date = lubridate::date(datetimestamp),
+         month = lubridate::month(datetimestamp, label = TRUE)) %>% 
+  group_by(month) %>%
+  summarise(sum = sum(totprcp, na.rm = T)) %>%
+  # summarise(mean = mean(sum)) %>%
+  ggplot(aes(x = month, y = sum)) +
+  geom_col(fill = "#0075AC") +
+  geom_hline(yintercept = 43.2, linewidth = 1, linetype = "dashed", color = "grey50") +
+  geom_text(aes(label = sum), vjust = 1.5, color = "white") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_classic() +
+  theme(axis.text = element_text(color = "black", size = 12),
+        axis.title.y = element_text(color = "black", size = 12)) +
+  # geom_text(aes(x = "Mar", y = 75), 
+  #           label = "69.8 mm",
+  #           size = 4.5,
+  #           color = "grey50") +
+  labs(x = '',
+       y = 'Precipitation (mm)',
+       caption = "Hortizontal line represents monthly average.")
+
+## DAILY ----
+
+fun_in <- function(x) sum(x, na.rm = TRUE)
+
+MET |> 
+  filter(datetimestamp > '2026-01-01 00:15' & datetimestamp < '2026-05-01 00:00') %>%
+  aggreswmp(by = "days", FUN = fun_in, params = "totprcp") %>% 
+  filter(totprcp >= 1) %>% 
+  mutate(date = as.Date(datetimestamp),
+         month = lubridate::month(date, label = T),
+         prcp_in = totprcp * 0.0393701,
+         prcp_in = round(prcp_in, digits = 1),
+         wet = case_when(totprcp < 10 ~ "Not Very Wet (<10mm)",
+                         totprcp >= 10 & totprcp < 20 ~ "Wet (10-19mm)",
+                         totprcp >= 20 & totprcp < 30 ~ "Very Wet (20-29mm)",
+                         totprcp > 30 ~ "Extremely Wet (>30mm)"),
+         wet = factor(wet, levels = c("Not Very Wet (<10mm)",
+                                      "Wet (10-19mm)",
+                                      "Very Wet (20-29mm)",
+                                      "Extremely Wet (>30mm)"))) %>% 
+  ggplot(aes(x = date, y = totprcp)) +
+  geom_segment(aes(x = date, xend = date, y = 0, yend = totprcp),
+               size = 1) +
+  geom_point(aes(color = wet), size =2, bg = 4) +
+  khroma::scale_color_okabeito() + # change color codes
+  scale_y_continuous(expand = c(0,0), limits = c(0,70)) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b") +
+  theme_classic() +
+  theme(axis.text = element_text(color = "black", size = 12),
+        axis.title.y = element_text(color = "black", size = 12)) +
+  labs(x = '',
+       y = 'Total Daily Precipitation (mm)',
+       color = "Amount of Rain")
+
+## INTENSITY ----
+
+# rainfall intensity 
+# in mm/hr
+
+fun_in <- function(x) sum(x, na.rm = TRUE)
+
+MET |>
+  filter(datetimestamp > '2026-01-01 00:15'& datetimestamp < '2026-05-01 00:00') %>% 
+  aggreswmp(by = "hours", FUN = fun_in, params = "totprcp") %>% 
+  rename(intensity = totprcp) %>% 
+  mutate(date = lubridate::date(datetimestamp),
+         month = lubridate::month(datetimestamp, label = TRUE),
+         intensity_cat = case_when(intensity == 0 ~ "No Rain (0 mm/hr)",
+                                    intensity > 0 & intensity < 2.5 ~ "Light Rain (<2.5 mm/hr)",
+                                    intensity >= 2.5 & intensity < 7.6 ~ "Moderate Rain (2.5-7.6 mm/hr)",
+                                    intensity >= 7.6 & intensity < 50 ~ "Heavy Rain (7.6-50 mm/hr)",
+                                    intensity > 30 ~ "Intense Rain (>50mm/hr)"),
+         intensity_cat = factor(intensity_cat, levels = c("No Rain (0 mm/hr)",
+                                                          "Light Rain (<2.5 mm/hr)",
+                                                          "Moderate Rain (2.5-7.6 mm/hr)",
+                                                          "Heavy Rain (7.6-50 mm/hr)",
+                                                          "Intense Rain (>50mm/hr)")
+                                )
+         ) %>% 
+  # group_by(month, intensity_cat) %>%
+  # count() %>%
+  filter(intensity_cat != "No Rain (0 mm/hr)") %>% 
+  ggplot() +
+  geom_bar(aes(x = month, fill = intensity_cat)) +
+  ggthemes::scale_fill_colorblind() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_classic() +
+  theme(axis.text = element_text(color = "black", size = 12),
+        axis.title.y = element_text(color = "black", size = 12)) +
+  labs(x = "",
+       y = "Amount of Hours",
+       fill = "Intensity Category")
+```
+
+```{r}
+#| label: tbl-topRain
+#| echo: false
+#| tbl-cap: "Top five highest monthly rainfall totals."
+
+# MET %>% 
+#   (filter(datetimestamp < '2026-05-01 00:00'))
+
+Monthly_PRCP<-aggreswmp(MET, 'months', function(x) sum(x, na.rm = T), 
+params = 'totprcp')
+
+Monthly_PRCP$Month <- format(Monthly_PRCP$datetimestamp, "%b")
+Monthly_PRCP$Year <- year(Monthly_PRCP$datetimestamp)
+Monthly_PRCP$Month_number <- month(Monthly_PRCP$datetimestamp)
+
+TopValues <- Monthly_PRCP %>% 
+  top_n(5, totprcp) %>%
+  arrange(desc(totprcp)) 
+
+TopValues %>%
+  select(Month,Year,totprcp) %>% 
+  rename(`Total Precipitation (mm)` = 'totprcp') %>% 
+  kbl(align = "c") %>%
+  kable_styling(fixed_thead = T) %>% 
+  column_spec(3, border_left = T)
+
+```
+
+```{r}
+#| label: fig-AprPrecip
+#| echo: false
+#| fig.cap: April rainfall at the Pellicer Creek weather station.
+#| fig.subcap:
+#|    - "Total precipitation for April 2002-2026."
+#|    - "Monthly total precipitation 2002-2026."
+#|    - "Annual precipitation totals Jan 2002-April 2026."
+#|  ##|    - "Annual precipitation totals Jan 2002-Dec 2024."
+#| layout-ncol: 2
+
+## April Precip
+
+ April_PRCP <- Monthly_PRCP %>%
+   filter(Month == "Apr", na.rm=TRUE) 
+ 
+ ggplot(data = April_PRCP, mapping= aes(Year, totprcp)) +
+   geom_col(fill = "#0075AC") +
+  theme_classic() +
+   theme(axis.text = element_text(color = "black", size = 12), #angle=45, vjust=1, hjust=1),
+         axis.title.y = element_text(color = "black", size = 12)) +
+   #scale_x_date(date_labels = "%y") +
+   labs(title = "", x = "", y = "Precipitation (mm)")
+
+## MONTHLY/YEAR ----
+
+# Plotting
+ggplot(Monthly_PRCP, aes(datetimestamp, totprcp)) +
+  geom_segment(aes(x=datetimestamp, xend=datetimestamp, y=0, yend=totprcp), colour = "#0075AC") +
+  theme_classic() +
+  theme(axis.text = element_text(color = "black", size = 12),
+        axis.title.y = element_text(color = "black", size = 12)) +
+labs(title = "", x = "", y = "Precipitation (mm)")
+
+## Seasonal Precip ----
+# seasonal_barplot(MET, param = 'totprcp')
+
+## BOXPLOT ----
+# raw_boxplot(MET, param = 'totprcp')
+
+# seasonal_boxplot(MET, param = 'totprcp', target_yr = 2024)
+
+# box_rain <- ggplot(Monthly_PRCP, aes(x = Month, y = totprcp, fill = Month)) + 
+#   geom_boxplot(fill = "#56B4E9") +
+#   scale_x_discrete(limits = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')) +
+#   geom_point(data = filter(Monthly_PRCP, Year == 2024), 
+#                  aes(color = "2024"), size = 4) +
+#   scale_color_manual(name = "", values = c("2024" = "red")) +
+#   scale_fill_manual(name = "", values = c("2002-2024" = "white")) +
+#   theme_classic() +
+#   theme(legend.position = "bottom", axis.text = element_text(color = "black", size = 12),
+#         axis.title.y = element_text(color = "black", size = 12)) +
+#   labs(x = '',
+#        y = 'Precipitation (mm)')
+#   box_rain
+
+#Boxplots another way
+
+boxplot_prcp <- ggplot(data = Monthly_PRCP, 
+                      aes(x = Month, y = totprcp)) +
+      geom_boxplot(data = filter(Monthly_PRCP, Year < 2026), 
+                   aes(fill = "2002-2025")) +
+      geom_point(data = filter(Monthly_PRCP, Year == 2026), 
+                 aes(color = "2026"),
+                 size = 4) +
+      scale_x_discrete(limits = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')) +
+      scale_color_manual(name = "", 
+                         values = c("2026" = "red")) +
+      scale_fill_manual(name = "",
+                        values = c("2002-2026" = "white")) +
+      theme_classic() +
+      theme(legend.position = "bottom",
+            axis.text = element_text(color = "black")) +
+      labs(x = "", y = 'Precipitation (mm)')
+    boxplot_prcp
+
+## YEAR ----
+
+# Plotting
+
+# fun_in <- function(x) sum(x, na.rm = TRUE)
+# 
+# MET |> 
+#   filter(datetimestamp > '2003-01-01 00:15' & datetimestamp < '2025-01-01 00:00') %>%
+#   aggreswmp(by = "years", FUN = fun_in, params = "totprcp") %>% 
+#   ggplot(aes(datetimestamp, totprcp)) +
+#   geom_col(fill = "#0075AC") +
+#   theme_classic() +
+#   theme(axis.text = element_text(color = "black", size = 12), #angle=45, vjust=1, hjust=1),
+#         axis.title.y = element_text(color = "black", size = 12)) +
+#   geom_text(aes(label = totprcp), vjust = -0.5, color = "black", size = 2) +
+#   labs(title = "", x = "", y = "Precipitation (mm)")
+
+#Another way
+
+# Monthly_PRCP %>%
+#   ggplot(aes(Year, totprcp)) +
+#   geom_col(fill = "#0075AC") +
+#   theme_classic() +
+#   theme(axis.text = element_text(color = "black", size = 12), #angle=45, vjust=1, hjust=1),
+#         axis.title.y = element_text(color = "black", size = 12)) +
+#   geom_text(aes(label = totprcp), vjust = 1.5, color = "white") +
+#   #scale_x_date(date_labels = "%y") +
+#   labs(title = "", x = "", y = "Total Annual Precipitation (mm)")
+
+
+```
+
+### Light Intensity
+
+The plot below is interactive. Clicking on elements in the legend (months) will select or deselect months of interest. Additionally, the axis can be adjusted by selecting portions of the plot to isolate.
+
+```{r}
+#| label: fig-lightintensity
+#| echo: false
+#| fig.cap: "Total light intensity by time of day for each month based on photosynthetically active radiation (PAR) data collected at the Pellicer Creek weather station."
+
+ggplotly(
+MET %>% 
+  filter(datetimestamp > '2026-01-01 00:15'& datetimestamp < '2026-05-01 00:00') %>% 
+  select(datetimestamp, totpar) %>% 
+  mutate(month = lubridate::month(datetimestamp, label = T), 
+         day = lubridate::day(datetimestamp),
+         hour = lubridate::hour(datetimestamp),
+         minute = lubridate::minute(datetimestamp),
+         time = format(as.POSIXct(datetimestamp), format = "%H:%M")) %>% 
+  group_by(month, time) %>% 
+  summarize(intensity = sum(totpar, na.rm = T)) %>% 
+  ungroup() %>% 
+  mutate(time = strptime(time, format = "%H:%M", tz = ""),
+         datetime = as.POSIXct(time)) %>% 
+  ggplot(aes(x = datetime, y = intensity, group = month)) +
+  geom_line(aes(color = month)) +
+  scale_x_datetime(date_breaks = "hours", 
+                   date_labels = "%H:%M") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        axis.text = element_text(color = "black")) +
+  labs(x = "Time of Day (HH:MM)",
+       y = "Intensity of PAR (mMol/m-2)")
+)
+```
+
+### Temperature
+
+Air and water temperatures are presented as daily averages (blue line) with historic ranges (daily range and average daily range) provided in shades of gray. 
+
+```{r}
+#| label: fig-range-atemp
+#| echo: false
+#| fig.cap: "Historical daily range of air temperature at the SWMP weather station with current year daily average overlaid in blue."
+
+  historical_daily_range(MET, param = 'atemp', target_yr = 2026) + labs(x = "", y = "Air Temperature (\u00B0C)")
+  
+```
+
+```{r}
+#| label: fig-range-temp
+#| echo: false
+#| fig.cap: Historical daily range of water temperature at each SWMP water quality station with current year daily average overlaid in blue.
+#| fig.subcap:
+#|    - "Pine Island"
+#|    - "San Sebastian"
+#|    - "Fort Matanzas"
+#|    - "Pellicer Creek"
+#| layout-ncol: 2
+
+historical_daily_range(pi, param = 'temp', target_yr = 2026) + labs(x = "", y = "Water Temperature (\u00B0C)")
+
+historical_daily_range(ss, param = 'temp', target_yr = 2026) + labs(x = "", y = "Water Temperature (\u00B0C)")
+
+historical_daily_range(fm, param = 'temp', target_yr = 2026) + labs(x = "", y = "Water Temperature (\u00B0C)")
+
+historical_daily_range(pc, param = 'temp', target_yr = 2026) + labs(x = "", y = "Water Temperature (\u00B0C)")
+```
+
+### Salinity
+
+```{r}
+#| label: fig-range-sal
+#| echo: false
+#| fig.cap: Historical daily range of salinity at each SWMP water quality station with current year daily average overlaid in blue.
+#| fig.subcap:
+#|    - "Pine Island"
+#|    - "San Sebastian"
+#|    - "Fort Matanzas"
+#|    - "Pellicer Creek"
+#| layout-ncol: 2
+
+historical_daily_range(pi, param = 'sal', target_yr = 2026)
+
+historical_daily_range(ss, param = 'sal', target_yr = 2026)
+
+historical_daily_range(fm, param = 'sal', target_yr = 2026)
+
+historical_daily_range(pc, param = 'sal', target_yr = 2026)
+```
+
+
