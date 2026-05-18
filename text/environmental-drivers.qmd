@@ -441,7 +441,7 @@ Extreme temperatures, both high and low, have drastic impacts on environmental p
 
 <!-- Overall, mean monthly temperatures in January, March, May, June, and November were higher than average (@fig-temp-anomalies), with November having the highest anomalies recorded in that month. February, April, September, and December of this year were cooler than average. . The highest average air temperature ever recorded at the GTMNERR weather station was recorded in June 2024 (@fig-dewpt). -->
 
-No freeze events were recorded this year.
+There was one day (February 1st) in 2026 that recorded air temperature readings at or below -4°C for a total of 4.25 hours.
 
 ```{r}
 #| label: fig-temp-anomalies
@@ -577,6 +577,27 @@ ggplotly(
 <!--   kable_styling(fixed_thead = T) %>% -->
 <!--   column_spec(1, border_left = T) -->
 <!-- ``` -->
+
+```{r}
+#| label: tbl-freezing-temp
+#| echo: false
+#| tbl-cap: "Air temperature readings recorded at the SWMP Pellicer Creek meteorological that are less than or equal to 0 degrees C."
+# 
+#Filter all atemp data to <=0
+Freezes<-MET[which(MET$atemp<=0),]
+
+Freeze_Timestamps <- Freezes %>%
+  filter(atemp <= -4.0) %>%
+  filter(datetimestamp > "2025-12-31 23:45:00") %>%
+  mutate(mdy_date = format(datetimestamp, "%m/%d/%Y %H:%M")) %>%
+    select(mdy_date, atemp) %>%
+  rename(`Date` = mdy_date,
+         `Air Temperature` = atemp)
+
+kbl(Freeze_Timestamps, align = "c") %>%
+  kable_styling(fixed_thead = T, font_size = 12, bootstrap_options = "striped") %>%
+  row_spec(0, font_size = 12)
+```
 
 
 ```{r}
