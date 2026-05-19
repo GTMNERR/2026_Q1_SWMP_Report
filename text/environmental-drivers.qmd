@@ -232,7 +232,7 @@ MET %>%
 ```{r}
 #| label: fig-winds-monthly
 #| echo: false
-#| fig.cap: Monthly wind speed and direction from the Pellicer Creek weather station for January - March 2026.
+#| fig.cap: Monthly wind speed and direction from the Pellicer Creek weather station for January - April 2026.
 #| fig.subcap:
 #|    - "Monthly wind speeds"
 #| layout-ncol: 1
@@ -240,7 +240,7 @@ MET %>%
 MET_wind_q1 <- MET %>% 
   filter(between(datetimestamp, 
                  as.POSIXct("2026-01-01 00:00:00"), 
-                 as.POSIXct("2026-04-01 00:00:00")))
+                 as.POSIXct("2026-05-01 00:00:00")))
 
 plot_wind(MET_wind_q1, type = 'month', main = NULL)
 
