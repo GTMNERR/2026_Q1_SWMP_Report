@@ -137,7 +137,7 @@ Pellicer Creek is located within a waterbody with known impairments for dissolve
 #| fig.cap: Continuous dissolved oxygen at Pellicer Creek with monthly average overlaid in solid gray line. Conditions are indicated as good when above 5 mg/L, fair between 2 and 5 mg/L, and poor if less than 2 mg/L.
 #| fig.subcap:
 #|     - "For the past five years"
-#|     - "For the current 2025 year"
+#|     - "For the current 2026 year"
 #| layout-ncol: 2
     
 threshold_criteria_plot(pc, param = 'do_mgl', rng = c(2021, 2026), 
