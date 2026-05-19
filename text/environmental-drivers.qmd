@@ -50,7 +50,7 @@ Typically, a Nor’easter is a storm along the East Coast of the United States w
 ```{r}
 #| label: tbl-hurricanes
 #| echo: false
-#| tbl-cap: "Extreme storms that affected the GTMNERR from September 2002-June 2025. Asterisks (*) represent storms listed in NOAA’s Historic Hurricane Tracker as coming within 60 kilometers of the GTMNERR. Cardinal directions for wind were converted using a 16-point meteorological compass found at https://planetcalc.com/3590/. H = Hurricane, TS = Tropical Storm."
+#| tbl-cap: "Extreme storms that affected the GTMNERR from September 2002-December 2025. Asterisks (*) represent storms listed in NOAA’s Historic Hurricane Tracker as coming within 60 kilometers of the GTMNERR. Cardinal directions for wind were converted using a 16-point meteorological compass found at https://planetcalc.com/3590/. H = Hurricane, TS = Tropical Storm."
 
 storms <- readxl::read_xlsx(here::here('data', 
                                       'storms_table_for_Quarterly_Report.xlsx'),
@@ -556,54 +556,54 @@ ggplotly(
 <!-- ) -->
 <!-- ``` -->
 
-<!-- ```{r} -->
-<!-- #| label: tbl-high-temp-duration -->
-<!-- #| echo: false -->
-<!-- #| tbl-cap: "Date and duration of temperatures over 90 degrees fahrenheit for greater than 2 hours at the Pellicer Creek weather station" -->
-<!-- #  -->
-<!-- MET %>% -->
-<!--   filter(datetimestamp >= as.POSIXct("2025-01-01 00:00")) %>% -->
-<!--   setstep() %>% -->
-<!--   threshold_identification(param = c('atemp'), -->
-<!--                            parameter_threshold = c(32.2), -->
-<!--                            threshold_type = c('>='), -->
-<!--                            time_threshold = 2) %>% -->
-<!--   mutate(date = as.Date(starttime)) %>% -->
-<!--   group_by(date) %>% -->
-<!--   summarize(sum = sum(duration)) %>% -->
-<!--   rename(Date = date, -->
-<!--          `Duration (hrs)` = sum) %>% -->
-<!--   kbl(align = "c") %>% -->
-<!--   kable_styling(fixed_thead = T) %>% -->
-<!--   column_spec(1, border_left = T) -->
-<!-- ``` -->
-
 ```{r}
-#| label: tbl-freezing-temp
+#| label: tbl-low-duration
 #| echo: false
-#| tbl-cap: "Air temperature readings recorded at the SWMP Pellicer Creek meteorological that are less than or equal to 0 degrees C."
-# 
-#Filter all atemp data to <=0
-Freezes<-MET[which(MET$atemp<=0),]
+#| tbl-cap: "Date and duration of air temperatures less than or equal to 0 degrees C for greater than 2 hours at the Pellicer Creek weather station."
 
-Freeze_Timestamps <- Freezes %>%
-  filter(atemp <= -4.0) %>%
-  filter(datetimestamp > "2025-12-31 23:45:00") %>%
-  mutate(mdy_date = format(datetimestamp, "%m/%d/%Y %H:%M")) %>%
-    select(mdy_date, atemp) %>%
-  rename(`Date` = mdy_date,
-         `Air Temperature` = atemp)
-
-kbl(Freeze_Timestamps, align = "c") %>%
-  kable_styling(fixed_thead = T, font_size = 12, bootstrap_options = "striped") %>%
-  row_spec(0, font_size = 12)
+MET %>%
+  filter(datetimestamp >= as.POSIXct("2026-01-01 00:00")) %>%
+  setstep() %>%
+  threshold_identification(param = c('atemp'),
+                           parameter_threshold = c(0.0),
+                           threshold_type = c('<='),
+                           time_threshold = 2) %>%
+  mutate(date = as.Date(starttime)) %>%
+  group_by(date) %>%
+  summarize(sum = sum(duration)) %>%
+  rename(Date = date,
+         `Duration (hrs)` = sum) %>%
+  kbl(align = "c") %>%
+  kable_styling(fixed_thead = T) %>%
+  column_spec(1, border_left = T)
 ```
 
+<!-- # ```{r} -->
+<!-- # #| label: tbl-freezing-temp -->
+<!-- # #| echo: false -->
+<!-- # #| tbl-cap: "Air temperature readings recorded at the SWMP Pellicer Creek weather station in 2026 that are less than or equal to 0 degrees C." -->
+<!-- # #  -->
+<!-- # #Filter all atemp data to <=0 -->
+<!-- # Freezes<-MET[which(MET$atemp<=0),] -->
+<!-- #  -->
+<!-- # Freeze_Timestamps <- Freezes %>% -->
+<!-- #   filter(atemp <= -4.0) %>% -->
+<!-- #   filter(datetimestamp > "2025-12-31 23:45:00") %>% -->
+<!-- #   mutate(mdy_date = format(datetimestamp, "%m/%d/%Y %H:%M")) %>% -->
+<!-- #     select(mdy_date, atemp) %>% -->
+<!-- #   rename(`Date` = mdy_date, -->
+<!-- #          `Air Temperature` = atemp) -->
+<!-- #  -->
+<!-- # kbl(Freeze_Timestamps, align = "c") %>% -->
+<!-- #   kable_styling(fixed_thead = T, font_size = 12, bootstrap_options = "striped") %>% -->
+<!-- #   row_spec(0, font_size = 12) -->
+<!-- # ``` -->
+
 
 ```{r}
-#| label: tbl-low-temp-duration
+#| label: tbl-low-temp-occurences
 #| echo: false
-#| tbl-cap: "Number of occurrences air temperature recorded at the SWMP Pellicer Creek meteorological was less than or equal to 0 degrees C"
+#| tbl-cap: "Number of occurrences air temperature recorded at the SWMP Pellicer Creek weather station was less than or equal to 0 degrees C"
 # 
 #Filter all atemp data to <=0
 Freezes<-MET[which(MET$atemp<=0),]
@@ -674,8 +674,9 @@ Freeze_Table <- Yearly_Freezes %>%
 Filtered_Table <- Freeze_Table %>% 
   arrange(Year, Number_of_Daily_Means) %>%     
   distinct(Year, .keep_all = TRUE)  %>% 
-  select(Year, YearlyCounts, NumberOfDays, Number_of_Daily_Means, Date_of_Daily_Mean) %>% 
-  rename(`Number of Occurrences` = YearlyCounts,
+    mutate(mdy_date = format(Date_of_Daily_Mean, "%m/%d/%Y %H:%M")) %>%
+    select(Year, YearlyCounts, NumberOfDays, Number_of_Daily_Means, Date_of_Daily_Mean) %>% 
+    rename(`Number of Occurrences` = YearlyCounts,
          `Number of Days` = NumberOfDays,
          `Number of Occurrences Daily Mean` = Number_of_Daily_Means,
          `Date of Daily Mean` = Date_of_Daily_Mean)
