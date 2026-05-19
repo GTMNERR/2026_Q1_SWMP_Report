@@ -27,7 +27,7 @@ load(here('output','data', 'pc_wq.Rdata'))
 
 The following includes variables that establish the estuarine setting: rainfall, light intensity, water temperature, and salinity. These variables are driven primarily by climatic patterns and largely influence water quality, biological processes, and habitat condition.
 
-Low precipitation levels in November and December lead to drought conditions at the end of 2025 and into 2026. NOAA and NIDIS report these events on their [website](https://www.drought.gov) and [here](https://www.drought.gov/location/32086,%20Saint%20Augustine,%20FL,%20USA) for local St. Augustine drought conditions.
+Low precipitation levels in November and December led to drought conditions at the end of 2025 and into 2026. NOAA and NIDIS report these events on their [website](https://www.drought.gov) and [here](https://www.drought.gov/location/32086,%20Saint%20Augustine,%20FL,%20USA) for local St. Augustine drought conditions.
 
 <!-- ## Summary -->
 <!-- Winter storm Finn (unofficially named) brought rainfall and strong winds in [January](https://www.actionnewsjax.com/news/local/strong-storm-cold-front-will-move-across-northeast-florida-southeast-georgia/DNJ3SOGJ35G4FCKJLPJNP67YZY/) to Northeast Florida causing some local schools to release students early and cancel after school activities (@fig-rainfall-1; @fig-rainfall-2). This event is discussed in further detail in the next chapter. -->
